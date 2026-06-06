@@ -1,5 +1,6 @@
 package dev.warpsend.data.repository
 
+import dev.warpsend.core.model.FileChunk
 import dev.warpsend.core.model.TransferFile
 import dev.warpsend.core.model.TransferSession
 import dev.warpsend.core.model.TransferStatus
@@ -50,5 +51,17 @@ class TransferRepositoryImpl @Inject constructor(
 
     override suspend fun deleteSession(id: String) {
         transferDao.deleteSession(id)
+    }
+
+    override suspend fun getChunksForFile(fileId: String): List<FileChunk> {
+        return transferDao.getChunksForFile(fileId).map { it.toDomain() }
+    }
+
+    override suspend fun updateChunkStatus(fileId: String, index: Int, isCompleted: Boolean) {
+        transferDao.updateChunkStatus(fileId, index, isCompleted)
+    }
+
+    override suspend fun saveChunks(chunks: List<FileChunk>) {
+        transferDao.insertChunks(chunks.map { it.toEntity() })
     }
 }

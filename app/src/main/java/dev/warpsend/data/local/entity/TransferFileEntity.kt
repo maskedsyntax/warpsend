@@ -26,5 +26,6 @@ data class TransferFileEntity(
     val size: Long,
     val mimeType: String,
     val status: FileStatus,
-    val transferredBytes: Long
+    val transferredBytes: Long,
+    val checksum: String?
 )

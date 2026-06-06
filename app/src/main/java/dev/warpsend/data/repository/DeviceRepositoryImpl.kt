@@ -5,20 +5,29 @@ import dev.warpsend.data.local.dao.DeviceDao
 import dev.warpsend.data.local.toDomain
 import dev.warpsend.data.local.toEntity
 import dev.warpsend.domain.DeviceRepository
+import dev.warpsend.domain.DiscoveryManager
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class DeviceRepositoryImpl @Inject constructor(
-    private val deviceDao: DeviceDao
+    private val deviceDao: DeviceDao,
+    private val discoveryManager: DiscoveryManager
 ) : DeviceRepository {
 
     override fun observeNearbyDevices(): Flow<List<Device>> {
-        // TODO: Integrate with NSD/UDP discovery
-        return deviceDao.getAllDevices().map { entities ->
-            entities.map { it.toDomain() }
+        return combine(
+            discoveryManager.startDiscovery(),
+            deviceDao.getAllDevices().map { entities -> entities.map { it.toDomain() } }
+        ) { discovered, saved ->
+            // Merge discovered devices with saved pairing status
+            discovered.map { discoveredDevice ->
+                val savedDevice = saved.find { it.id == discoveredDevice.id }
+                discoveredDevice.copy(isPaired = savedDevice?.isPaired ?: false)
+            }
         }
     }
 

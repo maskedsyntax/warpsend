@@ -29,7 +29,18 @@ data class TransferFile(
     val size: Long,
     val mimeType: String,
     val status: FileStatus,
-    val transferredBytes: Long
+    val transferredBytes: Long,
+    val checksum: String? = null
+)
+
+data class FileChunk(
+    val fileId: String,
+    val index: Int,
+    val startByte: Long,
+    val endByte: Long,
+    val size: Int,
+    val isCompleted: Boolean = false,
+    val checksum: String? = null
 )
 
 data class TransferSession(
@@ -40,5 +51,6 @@ data class TransferSession(
     val totalBytes: Long,
     val transferredBytes: Long,
     val createdAt: Long,
-    val updatedAt: Long
+    val updatedAt: Long,
+    val files: List<TransferFile> = emptyList()
 )

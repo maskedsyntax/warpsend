@@ -20,17 +20,42 @@ import dev.warpsend.presentation.home.components.ActionCard
 import dev.warpsend.presentation.home.components.SectionHeader
 import dev.warpsend.presentation.home.components.StatItem
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
+
 @Composable
 fun HomeRoute(
+    onSendClick: (List<android.net.Uri>) -> Unit,
+    onReceiveClick: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    HomeScreen(uiState = uiState)
+    val context = LocalContext.current
+    
+    val filePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetMultipleContents()
+    ) { uris ->
+        if (uris.isNotEmpty()) {
+            onSendClick(uris)
+        }
+    }
+
+    HomeScreen(
+        uiState = uiState,
+        onSendClick = { filePickerLauncher.launch("*/*") },
+        onReceiveClick = onReceiveClick
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(uiState: HomeUiState) {
+fun HomeScreen(
+    uiState: HomeUiState,
+    onSendClick: () -> Unit,
+    onReceiveClick: () -> Unit
+) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     var selectedItem by remember { mutableIntStateOf(0) }
     val items = listOf("Home", "History", "Settings")
@@ -102,7 +127,7 @@ fun HomeScreen(uiState: HomeUiState) {
                     icon = Icons.AutoMirrored.Filled.Send,
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    onClick = {},
+                    onClick = onSendClick,
                     modifier = Modifier.weight(1f)
                 )
                 ActionCard(
@@ -111,7 +136,7 @@ fun HomeScreen(uiState: HomeUiState) {
                     icon = Icons.AutoMirrored.Filled.CallReceived,
                     containerColor = MaterialTheme.colorScheme.secondaryContainer,
                     contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                    onClick = {},
+                    onClick = onReceiveClick,
                     modifier = Modifier.weight(1f)
                 )
             }

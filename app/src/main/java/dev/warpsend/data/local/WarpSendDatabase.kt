@@ -7,6 +7,7 @@ import dev.warpsend.data.local.converter.WarpSendConverters
 import dev.warpsend.data.local.dao.DeviceDao
 import dev.warpsend.data.local.dao.TransferDao
 import dev.warpsend.data.local.entity.DeviceEntity
+import dev.warpsend.data.local.entity.FileChunkEntity
 import dev.warpsend.data.local.entity.TransferFileEntity
 import dev.warpsend.data.local.entity.TransferSessionEntity
 
@@ -14,7 +15,8 @@ import dev.warpsend.data.local.entity.TransferSessionEntity
     entities = [
         DeviceEntity::class,
         TransferSessionEntity::class,
-        TransferFileEntity::class
+        TransferFileEntity::class,
+        FileChunkEntity::class
     ],
     version = 1,
     exportSchema = false

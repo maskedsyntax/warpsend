@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import dev.warpsend.data.local.entity.FileChunkEntity
 import dev.warpsend.data.local.entity.TransferFileEntity
 import dev.warpsend.data.local.entity.TransferSessionEntity
 import kotlinx.coroutines.flow.Flow
@@ -28,6 +29,15 @@ interface TransferDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertFiles(files: List<TransferFileEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertChunks(chunks: List<FileChunkEntity>)
+
+    @Query("UPDATE file_chunks SET isCompleted = :isCompleted WHERE fileId = :fileId AND `index` = :index")
+    suspend fun updateChunkStatus(fileId: String, index: Int, isCompleted: Boolean)
+
+    @Query("SELECT * FROM file_chunks WHERE fileId = :fileId")
+    suspend fun getChunksForFile(fileId: String): List<FileChunkEntity>
 
     @Query("SELECT * FROM transfer_files WHERE sessionId = :sessionId")
     fun getFilesForSession(sessionId: String): Flow<List<TransferFileEntity>>

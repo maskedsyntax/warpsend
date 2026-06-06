@@ -38,31 +38,31 @@ Scope: Android-only MVP built with Kotlin, Jetpack Compose, Material 3, MVVM, Cl
 
 ## 4. QR Pairing
 
-- [ ] Define pairing payload schema with device ID, display name, IP/port, protocol version, and public handshake metadata.
-- [ ] Generate QR code using ZXing for receiver pairing.
-- [ ] Add camera scanner flow for QR pairing.
-- [ ] Validate scanned payloads and create a trusted known-device record.
+- [x] Define pairing payload schema with device ID, display name, IP/port, protocol version, and public handshake metadata.
+- [x] Generate QR code using ZXing for receiver pairing.
+- [x] Add camera scanner flow for QR pairing.
+- [x] Validate scanned payloads and create a trusted known-device record.
 - [ ] Handle invalid, expired, incompatible, and duplicate pairing payloads.
 
 ## 5. Local Transfer Engine
 
-- [ ] Define transfer session, file manifest, chunk, checksum, progress, and status domain models.
-- [ ] Implement sender-side Ktor local HTTP server or endpoint exposure for chunked file transfer.
-- [ ] Implement receiver-side Ktor client for chunk download/upload coordination.
+- [x] Define transfer session, file manifest, chunk, checksum, progress, and status domain models.
+- [x] Implement sender-side Ktor local HTTP server or endpoint exposure for chunked file transfer.
+- [x] Implement receiver-side Ktor client for chunk download/upload coordination.
 - [ ] Support multi-file transfer manifests.
 - [ ] Persist transfer session state so interrupted transfers can resume.
 - [ ] Use content URIs safely through Android storage APIs without assuming direct filesystem paths.
-- [ ] Add foreground service for long-running transfers.
+- [x] Add foreground service for long-running transfers.
 - [ ] Add notification progress for active transfers.
 
 ## 6. Large File And Resume Support
 
-- [ ] Choose chunk size policy and document tradeoffs.
-- [ ] Store per-chunk completion state in Room.
-- [ ] Implement checksum validation for chunks and final files.
-- [ ] Resume after app restart, Wi-Fi interruption, or temporary disconnect.
+- [x] Choose chunk size policy and document tradeoffs.
+- [x] Store per-chunk completion state in Room.
+- [x] Implement checksum validation for chunks and final files.
+- [x] Resume after app restart, Wi-Fi interruption, or temporary disconnect.
 - [ ] Add retry policy with backoff and user-visible failure states.
-- [ ] Validate support path for files larger than 10 GB.
+- [x] Validate support path for files larger than 10 GB.
 
 ## 7. Persistence
 
