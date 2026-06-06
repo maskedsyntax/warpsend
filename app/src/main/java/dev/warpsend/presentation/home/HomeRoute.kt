@@ -1,93 +1,192 @@
 package dev.warpsend.presentation.home
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.CallReceived
+import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import dev.warpsend.presentation.home.components.ActionCard
+import dev.warpsend.presentation.home.components.SectionHeader
+import dev.warpsend.presentation.home.components.StatItem
 
 @Composable
 fun HomeRoute(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
-    HomeScreen(uiState = viewModel.uiState)
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    HomeScreen(uiState = uiState)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(uiState: HomeUiState) {
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    var selectedItem by remember { mutableIntStateOf(0) }
+    val items = listOf("Home", "History", "Settings")
+    val icons = listOf(Icons.Default.Home, Icons.Default.History, Icons.Default.Settings)
+    
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            TopAppBar(title = { Text(text = "WarpSend") })
+            LargeTopAppBar(
+                title = {
+                    Text(
+                        text = "WarpSend",
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                },
+                actions = {
+                    IconButton(onClick = {}) {
+                        Icon(Icons.Default.AccountCircle, contentDescription = "Profile")
+                    }
+                },
+                scrollBehavior = scrollBehavior
+            )
+        },
+        bottomBar = {
+            NavigationBar(
+                tonalElevation = 8.dp
+            ) {
+                items.forEachIndexed { index, item ->
+                    NavigationBarItem(
+                        icon = { Icon(icons[index], contentDescription = item) },
+                        label = { Text(item) },
+                        selected = selectedItem == index,
+                        onClick = { selectedItem = index }
+                    )
+                }
+            }
         }
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 20.dp),
+            verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
-            Text(
-                text = "Local-first file transfer",
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.SemiBold
-            )
-            Text(
-                text = "Send and receive files over your local network without accounts or cloud storage.",
-                style = MaterialTheme.typography.bodyLarge
-            )
+            // Hero / Welcome Message
+            Column(modifier = Modifier.padding(top = 8.dp)) {
+                Text(
+                    text = "Welcome back!",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = "Ready to warp some files?",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+
+            // Quick Actions Section
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Button(
-                    modifier = Modifier.weight(1f),
-                    onClick = {}
+                ActionCard(
+                    title = "Send",
+                    description = "Share files to nearby devices",
+                    icon = Icons.AutoMirrored.Filled.Send,
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    onClick = {},
+                    modifier = Modifier.weight(1f)
+                )
+                ActionCard(
+                    title = "Receive",
+                    description = "Wait for incoming transfers",
+                    icon = Icons.AutoMirrored.Filled.CallReceived,
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                    onClick = {},
+                    modifier = Modifier.weight(1f)
+                )
+            }
+
+            // Discovery Card (Enhanced)
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                color = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp),
+                shape = RoundedCornerShape(28.dp)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .padding(24.dp)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
                 ) {
-                    Text(text = "Send")
-                }
-                Button(
-                    modifier = Modifier.weight(1f),
-                    onClick = {}
-                ) {
-                    Text(text = "Receive")
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "Device Discovery",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = "Visible to others on this network",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    Switch(
+                        checked = true, 
+                        onCheckedChange = {},
+                        thumbContent = {
+                            if (true) {
+                                Icon(
+                                    imageVector = Icons.Default.Check,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(SwitchDefaults.IconSize),
+                                )
+                            }
+                        }
+                    )
                 }
             }
-            Spacer(modifier = Modifier.height(8.dp))
-            StatusCard(label = "Nearby devices", value = uiState.nearbyDeviceCount.toString())
-            StatusCard(label = "Active transfers", value = uiState.activeTransferCount.toString())
-            StatusCard(label = "Recent transfers", value = uiState.recentTransferCount.toString())
-        }
-    }
-}
 
-@Composable
-private fun StatusCard(label: String, value: String) {
-    Card(modifier = Modifier.fillMaxWidth()) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(text = label, style = MaterialTheme.typography.bodyLarge)
-            Text(text = value, style = MaterialTheme.typography.titleMedium)
+            // Stats / Activity Section
+            Column {
+                SectionHeader(title = "Your Activity")
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    StatItem(
+                        label = "Nearby",
+                        value = uiState.nearbyDeviceCount.toString(),
+                        icon = Icons.Default.Devices,
+                        modifier = Modifier.weight(1f)
+                    )
+                    StatItem(
+                        label = "Active",
+                        value = uiState.activeTransferCount.toString(),
+                        icon = Icons.Default.SwapHoriz,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+                Spacer(modifier = Modifier.height(12.dp))
+                StatItem(
+                    label = "Total Transfers (History)",
+                    value = uiState.recentTransferCount.toString(),
+                    icon = Icons.Default.History,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+
+            Spacer(modifier = Modifier.height(32.dp))
         }
     }
 }

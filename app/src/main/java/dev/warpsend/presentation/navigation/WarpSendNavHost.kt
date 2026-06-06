@@ -8,6 +8,8 @@ import dev.warpsend.presentation.home.HomeRoute
 
 object WarpSendRoutes {
     const val Home = "home"
+    const val History = "history"
+    const val Settings = "settings"
 }
 
 @Composable
@@ -20,6 +22,12 @@ fun WarpSendNavHost() {
     ) {
         composable(WarpSendRoutes.Home) {
             HomeRoute()
+        }
+        composable(WarpSendRoutes.History) {
+            // TODO: History screen
+        }
+        composable(WarpSendRoutes.Settings) {
+            // TODO: Settings screen
         }
     }
 }

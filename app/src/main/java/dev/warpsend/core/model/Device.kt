@@ -5,5 +5,6 @@ data class Device(
     val displayName: String,
     val host: String,
     val port: Int,
-    val lastSeenEpochMillis: Long
+    val lastSeenEpochMillis: Long,
+    val isPaired: Boolean = false
 )

@@ -14,7 +14,7 @@ Scope: Android-only MVP built with Kotlin, Jetpack Compose, Material 3, MVVM, Cl
 
 - [x] Define Clean Architecture layers: `data`, `domain`, `presentation`, and `core`.
 - [x] Create MVVM screen state pattern using immutable UI state and one-shot UI events.
-- [ ] Configure Hilt modules for repositories, database, networking, dispatchers, and transfer services.
+- [x] Configure Hilt modules for repositories, database, networking, dispatchers, and transfer services.
 - [ ] Establish app navigation for Home, Send, Receive, Pairing, Transfer Detail, History, Settings, and Permissions.
 - [ ] Add central permission handling for nearby Wi-Fi/network state, notifications, file access, camera, and foreground service requirements.
 
@@ -66,10 +66,10 @@ Scope: Android-only MVP built with Kotlin, Jetpack Compose, Material 3, MVVM, Cl
 
 ## 7. Persistence
 
-- [ ] Create Room entities for known devices, transfer history, transfer sessions, files, chunks, and settings.
-- [ ] Add DAOs and migrations policy.
-- [ ] Map Room entities to domain models.
-- [ ] Implement repositories for devices, transfers, history, and settings.
+- [x] Create Room entities for known devices, transfer history, transfer sessions, files, chunks, and settings.
+- [x] Add DAOs and migrations policy.
+- [x] Map Room entities to domain models.
+- [x] Implement repositories for devices, transfers, history, and settings.
 - [ ] Add cleanup policy for completed sessions and old temporary chunks.
 
 ## 8. Security And Privacy
